@@ -16,7 +16,7 @@ def remove_from_boot():
 def main(command):
     if command == "install": install()
     elif command == "update": update()
-    elif command == "remove-from-boot":remove_from_boot()
+    elif command == "remove-from-boot": remove_from_boot()
     else: print("Invalid command. Please use install or uninstall.")
     
 if __name__ == "__main__":
