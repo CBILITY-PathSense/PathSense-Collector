@@ -7,8 +7,7 @@ import re
 from dependencies.camera_threading import CameraThreader
 
 def main():
-    username = os.environ.get('SUDO_USER')
-    target_directory = os.path.join(os.path.expanduser(f'~{username}'), f"pathsense_images_{datetime.now().strftime('%Y-%m-%d')}")
+    target_directory = os.path.join(os.path.expanduser("~orangepi"), f"pathsense_images_{datetime.now().strftime('%Y-%m-%d')}")
     os.makedirs(target_directory, exist_ok=True)
     cam_thread = None
     cap = None
