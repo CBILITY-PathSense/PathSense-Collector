@@ -7,7 +7,8 @@ import re
 from dependencies.camera_threading import CameraThreader
 
 def main():
-    target_directory = os.path.join(os.path.expanduser('~'), f"pathsense_images_{datetime.now().strftime('%Y-%m-%d')}")
+    username = os.environ.get('SUDO_USER')
+    target_directory = os.path.join(os.path.expanduser(f'~{username}'), f"pathsense_images_{datetime.now().strftime('%Y-%m-%d')}")
     os.makedirs(target_directory, exist_ok=True)
     cam_thread = None
     cap = None
@@ -93,7 +94,7 @@ def find_camera_device():
 
         # Check if the device supports a streaming video format (e.g., 'YUYV', 'MJPG', 'H264')
         if re.search(b'\'MJPG\'', output):
-            return i
+            return "/dev/video" + str(i)
 
     # If no suitable device is found, return None
     return None
