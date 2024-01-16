@@ -22,8 +22,12 @@ def main():
                 print("No camera found.")
                 break
             else:
-                cap = cv2.VideoCapture(camera)
-            print(f"Opened camera at camera number {camera}")
+                try:
+                    cap = cv2.VideoCapture(camera)
+                    print(f"Opened camera at camera number {camera}")
+                except Exception as e:
+                    print(e)
+                    break
 
             # Set camera resolution
             cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
