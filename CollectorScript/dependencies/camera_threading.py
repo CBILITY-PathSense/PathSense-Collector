@@ -1,14 +1,13 @@
 import threading
 import numpy as np
-from typing import Tuple, Union
+from typing import Tuple, Union, Any
 import cv2
-from cv2.typing import MatLike
 
 class CameraThreader(threading.Thread):
     def __init__(self, cap):
         super().__init__()
         self.cap:cv2.VideoCapture = cap
-        self.last_frame:Union[MatLike,None] = None
+        self.last_frame:Any = None
         self.running = True
         self.frame_ready = threading.Condition()
 
@@ -24,7 +23,7 @@ class CameraThreader(threading.Thread):
                 self.cap.release()
                 self.running = False
 
-    def read_last_frame(self) -> Tuple[bool, Union[MatLike,None]]:
+    def read_last_frame(self) -> Tuple[bool, Any]:
         with self.frame_ready:
             self.frame_ready.wait()
             return self.running, self.last_frame
