@@ -1,16 +1,17 @@
 import cv2
 import time
 import os
-from datetime import datetime
 import subprocess
 import re
 from dependencies.camera_threading import CameraThreader
+import random
 
 def main():
-    target_directory = os.path.join(os.path.expanduser("~orangepi"), f"pathsense_images_{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}")
+    target_directory = os.path.join(os.path.expanduser("~orangepi"), f"pathsense_images_{random.randint(1000, 9999)}")
     os.makedirs(target_directory, exist_ok=True)
     cam_thread = None
     cap = None
+    num = 0
 
     # Keep alive until forced to close
     try:
@@ -45,12 +46,13 @@ def main():
                         break
 
                     # Save image to target directory as a .jpg file
-                    filename = os.path.join(target_directory, f"{datetime.now().strftime('%H-%M-%S')}.jpg")
+                    filename = os.path.join(target_directory, f"{num}_{random.randint(1000,9999)}.jpg")
                     if frame is not None:
                         cv2.imwrite(filename, frame)
                     print(f"Image Saved: {filename}")
 
                     # Delay before capturing next image
+                    num += 1
                     time.sleep(2)
             
             # If forced to close, close camera and exit
