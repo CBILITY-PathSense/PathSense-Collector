@@ -9,14 +9,14 @@ def update():
     subprocess.run(["chmod", "+x", "setup_sh/update.sh"])
     subprocess.run(["sudo", "setup_sh/update.sh"])
 
-def remove_from_boot():
-    subprocess.run(["chmod", "+x", "setup_sh/remove-from-boot.sh"])
-    subprocess.run(["sudo", "setup_sh/remove-from-boot.sh"])
+def stop():
+    subprocess.run(["chmod", "+x", "setup_sh/stop.sh"])
+    subprocess.run(["sudo", "setup_sh/stop.sh"])
 
 def main(command):
     if command == "install": install()
     elif command == "update": update()
-    elif command == "remove-from-boot": remove_from_boot()
+    elif command == "stop": stop()
     else: print("Invalid command. Please use install or uninstall.")
     
 if __name__ == "__main__":
