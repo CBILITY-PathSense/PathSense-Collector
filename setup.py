@@ -3,18 +3,15 @@ import argparse
 
 def install():
     subprocess.run(["chmod", "+x", "setup_sh/install.sh"])
-    subprocess.run(["sudo setup_sh/install.sh"])
-    subprocess.run(["cd",".."])
+    subprocess.run(["sudo", "setup_sh/install.sh"])
 
 def update():
     subprocess.run(["chmod", "+x", "setup_sh/update.sh"])
-    subprocess.run(["sudo setup_sh/update.sh"])
-    subprocess.run(["cd",".."])
+    subprocess.run(["sudo", "setup_sh/update.sh"])
 
 def remove_from_boot():
     subprocess.run(["chmod", "+x", "setup_sh/remove-from-boot.sh"])
-    subprocess.run(["sudo setup_sh/remove-from-boot.sh"])
-    subprocess.run(["cd",".."])
+    subprocess.run(["sudo", "setup_sh/remove-from-boot.sh"])
 
 def main(command):
     if command == "install": install()
