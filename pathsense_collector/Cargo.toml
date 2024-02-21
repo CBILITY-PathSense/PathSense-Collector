@@ -1,0 +1,12 @@
+[package]
+name = "pathsense_collector"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+chrono = "0.4.34"
+dirs = "5.0.1"
+opencv = { version = "0.88.8", default-features = false, features = ["videoio","video","imgcodecs"] }
+rand = "0.8.5"
+tokio = { version = "1.36.0", features = ["full"] }
+regex = "1.10.3"
