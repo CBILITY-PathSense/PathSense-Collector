@@ -6,7 +6,7 @@ This repository contains all binaries required to run the PathSense collector on
 
 Clone this repository and navigate to the directory
 ```sh
-git clone https://github.com/JiraPit/CMKL-PathSense-DataCollector.git
+git clone git@github.com:JiraPit/CMKL-PathSense-DataCollector.git
 cd CMKL-PathSense-DataCollector
 ```
 
