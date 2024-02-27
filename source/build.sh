@@ -1,5 +1,5 @@
 rm -d -r ../bin
-rm pathsense-collector
+rm ../pathsense-collector
 mkdir -p ../bin
 sudo apt-get -y update
 sudo apt-get -y install \
