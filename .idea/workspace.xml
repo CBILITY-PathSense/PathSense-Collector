@@ -46,7 +46,7 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/jira_pit/Documents/CMKL-PathSense-System",
+    "last_opened_file_path": "/home/jira_pit/Documents/Drive/CLASSWORK/SEN/SEN-107/Assessment3-4",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -86,6 +86,7 @@
       <workItem from="1709090495829" duration="18000" />
       <workItem from="1709090526942" duration="240000" />
       <workItem from="1709090952006" duration="55000" />
+      <workItem from="1709541705070" duration="90000" />
     </task>
     <task id="LOCAL-00001" summary="Run in Background">
       <option name="closed" value="true" />
