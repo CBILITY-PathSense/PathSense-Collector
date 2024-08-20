@@ -44,15 +44,19 @@ async fn main() -> ! {
                 break;
             }
 
-            let filename = target_directory
-                .join(format!(
-                    "{}_{}.jpg",
-                    num,
-                    rand::thread_rng().gen_range(1000..9999)
-                ));
+            let filename = target_directory.join(format!(
+                "{}_{}.jpg",
+                num,
+                rand::thread_rng().gen_range(1000..9999)
+            ));
 
             // Save the frame to a file
-            imgcodecs::imwrite(&filename.to_str().unwrap_or("/error.jpg"), &frame, &Vector::new()).unwrap();
+            imgcodecs::imwrite(
+                filename.to_str().unwrap_or("/error.jpg"),
+                &frame,
+                &Vector::new(),
+            )
+            .unwrap();
             println!("Image Saved: {:?}", filename);
 
             num += 1;
