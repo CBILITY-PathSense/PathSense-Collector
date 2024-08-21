@@ -1,68 +1,68 @@
-mod utils;
+mod camera;
 
+use camera::Camera;
 use opencv::core::Vector;
 use opencv::imgcodecs;
 use rand::Rng;
 use std::fs;
 use tokio::time;
-use utils::camera_thread::{find_camera_device, CameraThreader};
 
 // Assuming find_camera_device and CameraThreader are defined elsewhere
 
 #[tokio::main]
 async fn main() -> ! {
-    let home_dir = dirs::home_dir().unwrap();
-    let target_directory = home_dir.join(format!(
-        "pathsense_images_{}",
-        rand::thread_rng().gen_range(1000..9999)
-    ));
+    env_logger::init();
+
+    let mut rng = rand::thread_rng();
+    let target_directory = dirs::home_dir()
+        .unwrap()
+        .join(format!("pathsense_images_{}", rng.gen_range(1000..9999)));
     fs::create_dir_all(&target_directory).unwrap();
 
-    let mut num = 0;
+    let mut image_num = 0;
 
     loop {
-        let cam_thread = match CameraThreader::new(find_camera_device().unwrap_or(0)) {
-            Ok(c) => c,
-            Err(e) => {
-                eprintln!("Error: {}", e);
-                time::sleep(time::Duration::from_secs(2)).await;
-                continue;
-            }
-        };
-        cam_thread.start();
+        let mut cam = Camera::new();
+        if let Err(e) = cam.start() {
+            log::error!("Error starting camera thread: {}", e);
+            time::sleep(time::Duration::from_secs(3)).await;
+            continue;
+        }
 
         loop {
-            let (frame, running) = match cam_thread.read_last_frame() {
-                Ok((frame, running)) => (frame, running),
-                Err(e) => {
-                    eprintln!("Error: {}", e);
-                    break;
-                }
-            };
-            if !running {
-                eprintln!("Camera failed to start");
+            // Check if the camera thread is running
+            if !cam.is_running() {
                 break;
             }
 
-            let filename = target_directory.join(format!(
-                "{}_{}.jpg",
-                num,
-                rand::thread_rng().gen_range(1000..9999)
-            ));
+            // Get the last frame from the camera
+            let frame = match cam.get_last_frame().await {
+                Ok(frame) => frame,
+                Err(e) => {
+                    log::error!("Error: {}", e);
+                    break;
+                }
+            };
+
+            // Generate a random filename
+            let filename =
+                target_directory.join(format!("{}_{}.jpg", image_num, rng.gen_range(1000..9999)));
+            let filename = filename.to_str().unwrap();
 
             // Save the frame to a file
-            imgcodecs::imwrite(
-                filename.to_str().unwrap_or("/error.jpg"),
-                &frame,
-                &Vector::new(),
-            )
-            .unwrap();
-            println!("Image Saved: {:?}", filename);
+            match imgcodecs::imwrite(filename, &frame, &Vector::new()) {
+                Ok(_) => log::info!("Image Saved: {:?}", filename),
+                Err(e) => {
+                    log::error!("Error saving image: {}", e);
+                    break;
+                }
+            };
 
-            num += 1;
+            image_num += 1;
             time::sleep(time::Duration::from_secs(2)).await
         }
-        cam_thread.stop();
+
+        cam.stop();
         time::sleep(time::Duration::from_secs(5)).await
     }
 }
