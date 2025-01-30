@@ -1,19 +1,25 @@
+//
+// This module defines a Camera struct and related functionality for handling
+// camera operations in a multi-threaded environment. It provides the ability
+// to start and stop camera capture, access the most recent camera frame.
+//
+
 mod test;
 
 use opencv::prelude::*;
 use opencv::videoio::{VideoCapture, CAP_ANY, CAP_PROP_FRAME_HEIGHT, CAP_PROP_FRAME_WIDTH};
-use std::env;
 use std::error::Error;
 use std::process::Command;
 use std::sync::{Arc, RwLock};
-use tokio::fs::remove_file;
 use tokio::sync::watch;
 
 /// Struct representing a camera.
 /// It manages the camera job on a green thread and provide APIs for
 /// accessing and saving the most recent frame.
 pub struct Camera {
+    /// Watcher channel for the most recent frame
     frame_watcher: Option<watch::Receiver<Option<Mat>>>,
+    /// Flag indicating whether the camera is running
     is_running: Arc<RwLock<bool>>,
 }
 
@@ -37,7 +43,8 @@ impl Camera {
         }
 
         // Initialize the camera
-        let mut video_capture = VideoCapture::new(self.find_mjpg_camera()?, CAP_ANY)?;
+        let camera_index = self.find_mjpg_camera()?;
+        let mut video_capture = VideoCapture::new(camera_index, CAP_ANY)?;
         video_capture.set(CAP_PROP_FRAME_WIDTH, 320.0)?;
         video_capture.set(CAP_PROP_FRAME_HEIGHT, 240.0)?;
 
@@ -69,7 +76,9 @@ impl Camera {
                     }
                     Err(e) => {
                         log::error!("Error reading frame from camera: {}", e);
-                        continue;
+                        let mut is_running_lock = is_running.write().unwrap();
+                        *is_running_lock = false;
+                        break;
                     }
                 }
 
@@ -101,25 +110,6 @@ impl Camera {
                 }
             }
         }
-    }
-
-    /// Save the most recent frame to a file in the temp directory set by TMP_DIR_PATH environment variable.
-    /// If the frame is not available, this function will block until the next frame is available
-    pub async fn save_last_frame(&mut self) -> Result<(), Box<dyn Error>> {
-        // Get the path to asave the last frame
-        let path = env::var("TMP_DIR_PATH").expect("TMP_DIR_PATH not set");
-        let path = format!("{}/last_frame.jpg", path);
-
-        // Get the last frame
-        let frame = self.get_last_frame().await?;
-
-        //Delete tmp file if exists
-        remove_file(&path).await.unwrap_or(());
-
-        // Safe mat to file
-        opencv::imgcodecs::imwrite(&path, &frame, &opencv::core::Vector::new())?;
-
-        Ok(())
     }
 
     /// Stop the camera thread
@@ -159,4 +149,27 @@ impl Camera {
         }
         Err("No camera supports MJPG format".into())
     }
+
+    // Use v4l2 to set camera configurations
+    // fn configure_camera(&self, camera_index: i32) -> Result<(), Box<dyn Error>> {
+    //     let output = Command::new("v4l2-ctl")
+    //         .arg("--device")
+    //         .arg(format!("/dev/video{camera_index}"))
+    //         .arg("--set-ctrl")
+    //         .arg("auto_exposure=3")
+    //         .output()?;
+    //     if !output.status.success() {
+    //         return Err("Failed to configure camera".into());
+    //     }
+    //     let output = Command::new("v4l2-ctl")
+    //         .arg("--device")
+    //         .arg(format!("/dev/video{camera_index}"))
+    //         .arg("--set-ctrl")
+    //         .arg("exposure_dynamic_framerate=0")
+    //         .output()?;
+    //     if !output.status.success() {
+    //         return Err("Failed to configure camera".into());
+    //     }
+    //     Ok(())
+    // }
 }

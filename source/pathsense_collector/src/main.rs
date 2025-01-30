@@ -7,16 +7,15 @@ use rand::Rng;
 use std::fs;
 use tokio::time;
 
-// Assuming find_camera_device and CameraThreader are defined elsewhere
-
 #[tokio::main]
 async fn main() -> ! {
     env_logger::init();
 
     let mut rng = rand::thread_rng();
-    let target_directory = dirs::home_dir()
-        .unwrap()
-        .join(format!("pathsense_images_{}", rng.gen_range(1000..9999)));
+    let target_directory = dirs::home_dir().unwrap().join(format!(
+        "pathsense_images_{}",
+        rng.gen_range(100000..999999)
+    ));
     fs::create_dir_all(&target_directory).unwrap();
 
     let mut image_num = 0;
@@ -45,8 +44,7 @@ async fn main() -> ! {
             };
 
             // Generate a random filename
-            let filename =
-                target_directory.join(format!("{}_{}.jpg", image_num, rng.gen_range(1000..9999)));
+            let filename = target_directory.join(format!("image_{}.jpg", image_num));
             let filename = filename.to_str().unwrap();
 
             // Save the frame to a file
@@ -59,7 +57,7 @@ async fn main() -> ! {
             };
 
             image_num += 1;
-            time::sleep(time::Duration::from_secs(2)).await
+            time::sleep(time::Duration::from_millis(1500)).await
         }
 
         cam.stop();
