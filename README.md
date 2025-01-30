@@ -4,7 +4,7 @@ This repository contains all binaries required to run the PathSense Collector on
 
 ## Automatic Installation (for OrangePi running Debian)
 
-Run install command
+Run the install command
 ```sh
 ./pathsense-collector install
 ```
