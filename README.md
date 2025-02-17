@@ -2,20 +2,7 @@
 
 This repository contains all binaries required to run the PathSense Collector on an OrangePi. The collector is designed to be installed on OrangePi Zero3 devices running Debian. Other devices and operating system may work, but are not officially supported.
 
-## Automatic Installation (for OrangePi running Debian)
-
-Run the install command
-```sh
-./pathsense-collector install
-```
-
-### Uninstalling
-To uninstall, run the remove command.
-```sh
-./pathsense-collector remove
-```
-
-## Manual Installation
+## Installation
 
 If automatic installation fails or you are not using an OrangePi device running Debian, you can manually build the system instead.
 To do this, make sure that:
@@ -37,7 +24,8 @@ cd ..
 After that, you should be able to install the system using the **pathsense-collector** commands.
 
 ```sh
-./pathsense-collector install
+cd sh
+./install.sh
 ```
 
 
