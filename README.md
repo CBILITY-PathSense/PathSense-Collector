@@ -15,9 +15,7 @@ Then, navigate to the 'source' directory, and run the build script.
 
 ```sh
 cd source
-
 ./build.sh
-
 cd ..
 ```
 
