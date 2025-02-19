@@ -27,11 +27,10 @@ If the binary fails to run, it may be due to a processor architecture mismatch. 
 
 Before proceeding with the installation, ensure that the system runs successfully in manual mode.  
 
-1. Navigate to the `sh` directory and run the installation script:  
+1. Run the installation script:  
 
    ```sh
-   cd sh
-   ./install.sh
+   sh/install.sh
    ```  
 
 This will install the necessary components and set up the PathSense Collector for automated execution.  
