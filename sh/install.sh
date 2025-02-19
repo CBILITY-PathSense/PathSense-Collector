@@ -17,7 +17,8 @@ sudo cp -r bin/* /pathsense-collector/
 echo "PathSense-Collector files are copied to /pathsense-collector"
 
 # Copy the run script to the .pathsense-collector directory
-sydo cp -r sh/run.sh /pathsense-collector/
+sudo cp -r sh/run.sh /pathsense-collector/
+sudo chmod +x /pathsense-collector/run.sh
 echo "PathSense-Collector run script is copied to /pathsense-collector"
 
 # Check if run command is already in the boot file
